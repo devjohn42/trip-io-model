@@ -32,7 +32,15 @@ export const createTrip = async (app: FastifyInstance) => {
       data: {
         destination,
         startsAt: starts_at,
-        endsAt: ends_at
+        endsAt: ends_at,
+        participants: {
+          create: {
+            name: owner_name,
+            email: owner_email,
+            isOwner: true,
+            isConfirmed: true
+          }
+        }
       }
     })
 
