@@ -19,5 +19,20 @@ model Trip {
   isConfirmed Boolean  @default(false) @map("is_confirmed")
   createdAt   DateTime @default(now()) @map("created_at")
 
+  participants Participant[]
+
   @@map("trips")
+}
+
+model Participant {
+  id          String  @id @default(uuid())
+  name        String?
+  email       String
+  isConfirmed Boolean @default(false) @map("is_confirmed")
+  isOwner     Boolean @default(false) @map("is_owner")
+  trip_id     String
+
+  trip Trip @relation(fields: [trip_id], references: [id])
+
+  @@map("participants")
 }
