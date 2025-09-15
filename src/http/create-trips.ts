@@ -1,10 +1,15 @@
 import dayjs from 'dayjs'
+import 'dayjs/locale/pt-br'
+import localizedFormat from 'dayjs/plugin/localizedFormat.js'
 import { FastifyInstance } from "fastify"
 import { ZodTypeProvider } from "fastify-type-provider-zod"
 import nodeMailer from 'nodemailer'
 import { z } from "zod"
 import { getMailClient } from '../lib/mail.js'
 import { prisma } from "../lib/prisma.js"
+
+dayjs.locale('pt-br')
+dayjs.extend(localizedFormat)
 
 export const createTrip = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post('/trip', {
@@ -14,11 +19,12 @@ export const createTrip = async (app: FastifyInstance) => {
         starts_at: z.coerce.date(),
         ends_at: z.coerce.date(),
         owner_name: z.string(),
-        owner_email: z.email()
+        owner_email: z.email(),
+        emails_to_invite: z.array(z.email())
       })
     }
   }, async (request, reply) => {
-    const { destination, starts_at, ends_at, owner_name, owner_email } = request.body
+    const { destination, starts_at, ends_at, owner_name, owner_email, emails_to_invite } = request.body
 
     if (dayjs(starts_at).isBefore(new Date())) {
       throw new Error('Invalid trip start date')
@@ -34,15 +40,27 @@ export const createTrip = async (app: FastifyInstance) => {
         startsAt: starts_at,
         endsAt: ends_at,
         participants: {
-          create: {
-            name: owner_name,
-            email: owner_email,
-            isOwner: true,
-            isConfirmed: true
+          createMany: {
+            data: [
+              {
+                name: owner_name,
+                email: owner_email,
+                isOwner: true,
+                isConfirmed: true
+              },
+              ...emails_to_invite.map(email => {
+                return { email }
+              })
+            ]
           }
         }
       }
     })
+
+    const formattedStartDate = dayjs(starts_at).format('LL')
+    const formattedEndDate = dayjs(ends_at).format('LL')
+
+    const confirmationLink = `http://localhost:3333/trip/${trip.id}/confirm`
 
     const mail = await getMailClient()
 
@@ -55,10 +73,20 @@ export const createTrip = async (app: FastifyInstance) => {
         name: owner_name,
         address: owner_email
       },
-      subject: 'Testando o envio do email',
+      subject: `Confirme a sua viagem para ${destination} em ${formattedStartDate}`,
       html: `
-        <p>Teste do envio de e-mail</p>
-      `
+        <div>
+          <p>Solicitação de viagem para <strong>${destination}</strong> nas datas de <strong>${formattedStartDate}</strong> até <strong>${formattedEndDate}</strong>.</p>
+          <p></p>
+          <p>Para realizar a confirmação da sua presenla, clique no link abaixo:</p>
+          <p></p>
+          <p>
+            <a href="${confirmationLink}">Confirmar a minha presença na viagem</a>
+          </p>
+          <p></p>
+          <p>Caso não saiba a origem, ignore esse e-mail.</p>
+        </div>
+      `.trim()
     })
 
     console.log(nodeMailer.getTestMessageUrl(message))
