@@ -1,6 +1,4 @@
-import dayjs from 'dayjs'
-import 'dayjs/locale/pt-br'
-import localizedFormat from 'dayjs/plugin/localizedFormat.js'
+import dayjs from "dayjs"
 import { FastifyInstance } from "fastify"
 import { ZodTypeProvider } from "fastify-type-provider-zod"
 import nodeMailer from 'nodemailer'
@@ -8,8 +6,7 @@ import { z } from "zod"
 import { getMailClient } from '../lib/mail.js'
 import { prisma } from "../lib/prisma.js"
 
-dayjs.locale('pt-br')
-dayjs.extend(localizedFormat)
+
 
 export const createTrip = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post('/trip', {
@@ -78,7 +75,7 @@ export const createTrip = async (app: FastifyInstance) => {
         <div>
           <p>Solicitação de viagem para <strong>${destination}</strong> nas datas de <strong>${formattedStartDate}</strong> até <strong>${formattedEndDate}</strong>.</p>
           <p></p>
-          <p>Para realizar a confirmação da sua presenla, clique no link abaixo:</p>
+          <p>Para realizar a confirmação da sua presença, clique no link abaixo:</p>
           <p></p>
           <p>
             <a href="${confirmationLink}">Confirmar a minha presença na viagem</a>
