@@ -42,7 +42,7 @@ export const createActivity = async (app: FastifyInstance) => {
         data: {
           title,
           occursAt: occurs_at,
-          trip_id: trip.id,
+          trip_id: tripId,
         },
       })
 

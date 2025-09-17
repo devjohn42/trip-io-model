@@ -9,6 +9,7 @@ import { confirmPresence } from './http/confirm-presence.js'
 import { createTrip } from './http/create-trips.js'
 import { createActivity } from './http/create-activity.js'
 import { getActivities } from './http/get-activities.js'
+import { createLink } from './http/create-link.js'
 
 const app = fastify()
 
@@ -24,6 +25,7 @@ app.register(confirmPresence)
 app.register(confirmParticipant)
 app.register(createActivity)
 app.register(getActivities)
+app.register(createLink)
 
 app.listen({ port: 3333 }).then(() => {
   console.log('✅ HTTP SERVER RUNNING ✅')
