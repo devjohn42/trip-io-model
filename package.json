@@ -13,8 +13,10 @@
   "license": "ISC",
   "type": "module",
   "devDependencies": {
+    "@rocketseat/eslint-config": "^2.2.2",
     "@types/node": "^24.3.3",
     "@types/nodemailer": "^7.0.1",
+    "eslint": "^8.57.1",
     "prisma": "^6.16.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
