@@ -11,6 +11,7 @@ import { createActivity } from './http/create-activity.js'
 import { getActivities } from './http/get-activities.js'
 import { createLink } from './http/create-link.js'
 import { getLinks } from './http/get-links.js'
+import { getParticipants } from './http/get-participants.js'
 
 const app = fastify()
 
@@ -28,6 +29,7 @@ app.register(createActivity)
 app.register(getActivities)
 app.register(createLink)
 app.register(getLinks)
+app.register(getParticipants)
 
 app.listen({ port: 3333 }).then(() => {
   console.log('✅ HTTP SERVER RUNNING ✅')
