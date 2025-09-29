@@ -5,6 +5,7 @@ import nodemailer from 'nodemailer'
 import { prisma } from '../lib/prisma.js'
 import { dayjs } from '../lib/dayjs.js'
 import { getMailClient } from '../lib/mail.js'
+import { ClientError } from '../errors/client-error.js'
 
 export const createInvate = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -28,7 +29,7 @@ export const createInvate = async (app: FastifyInstance) => {
       })
 
       if (!trip) {
-        throw new Error('Trip not found.')
+        throw new ClientError('Trip not found.')
       }
 
       const participant = await prisma.participant.create({

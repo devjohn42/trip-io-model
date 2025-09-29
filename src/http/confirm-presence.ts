@@ -5,6 +5,7 @@ import { z } from 'zod'
 import { dayjs } from '../lib/dayjs.js'
 import { getMailClient } from '../lib/mail.js'
 import { prisma } from '../lib/prisma.js'
+import { ClientError } from '../errors/client-error.js'
 
 export const confirmPresence = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -33,7 +34,7 @@ export const confirmPresence = async (app: FastifyInstance) => {
       })
 
       if (!trip) {
-        throw new Error('Trip not found.')
+        throw new ClientError('Trip not found.')
       }
 
       if (trip.isConfirmed) {
