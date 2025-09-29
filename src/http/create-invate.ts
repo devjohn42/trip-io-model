@@ -6,6 +6,7 @@ import { prisma } from '../lib/prisma.js'
 import { dayjs } from '../lib/dayjs.js'
 import { getMailClient } from '../lib/mail.js'
 import { ClientError } from '../errors/client-error.js'
+import { env } from '../env.js'
 
 export const createInvate = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -44,7 +45,7 @@ export const createInvate = async (app: FastifyInstance) => {
 
       const mail = await getMailClient()
 
-      const confirmationLink = `http://localhost:3333/participants/${participant.id}/confirm`
+      const confirmationLink = `${env.API_BASE_URL}/participants/${participant.id}/confirm`
 
       const message = await mail.sendMail({
         from: {

@@ -6,6 +6,7 @@ import { dayjs } from '../lib/dayjs.js'
 import { getMailClient } from '../lib/mail.js'
 import { prisma } from '../lib/prisma.js'
 import { ClientError } from '../errors/client-error.js'
+import { env } from '../env.js'
 
 export const confirmPresence = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -57,7 +58,7 @@ export const confirmPresence = async (app: FastifyInstance) => {
 
       await Promise.all(
         trip.participants.map(async (participant) => {
-          const confirmationLink = `http://localhost:3333/participants/${participant.id}/confirm`
+          const confirmationLink = `${env.API_BASE_URL}/participants/${participant.id}/confirm`
 
           const message = await mail.sendMail({
             from: {
@@ -85,7 +86,7 @@ export const confirmPresence = async (app: FastifyInstance) => {
         }),
       )
 
-      return reply.redirect(`http://localhost:3333/trip/${tripId}`)
+      return reply.redirect(`${env.WEB_BASE_URL}/trip/${tripId}`)
     },
   )
 }

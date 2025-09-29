@@ -3,6 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma.js'
 import { ClientError } from '../errors/client-error.js'
+import { env } from '../env.js'
 
 export const confirmParticipant = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().get(
@@ -28,9 +29,7 @@ export const confirmParticipant = async (app: FastifyInstance) => {
       }
 
       if (participant.isConfirmed) {
-        return reply.redirect(
-          `http://localhost:3333/trip/${participant.trip_id}`,
-        )
+        return reply.redirect(`${env.API_BASE_URL}/trip/${participant.trip_id}`)
       }
 
       await prisma.participant.update({
@@ -38,7 +37,7 @@ export const confirmParticipant = async (app: FastifyInstance) => {
         data: { isConfirmed: true },
       })
 
-      return reply.redirect(`http://localhost:3333/trip/${participant.trip_id}`)
+      return reply.redirect(`${env.API_BASE_URL}/trip/${participant.trip_id}`)
     },
   )
 }

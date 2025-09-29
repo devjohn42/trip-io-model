@@ -15,6 +15,7 @@ import { getTripDetails } from './http/get-trip-details.js'
 import { getParticipant } from './http/get-participant.js'
 import { errorHandler } from './error-handler.js'
 import { z } from 'zod'
+import { env } from './env.js'
 
 const app = fastify()
 
@@ -51,6 +52,6 @@ app.register(getParticipant)
 
 app.setErrorHandler(errorHandler)
 
-app.listen({ port: 3333 }).then(() => {
+app.listen({ port: env.PORT }).then(() => {
   console.log('✅ HTTP SERVER RUNNING ✅')
 })

@@ -3,6 +3,7 @@ import { ZodTypeProvider } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma.js'
 import { dayjs } from '../lib/dayjs.js'
+import { ClientError } from '../errors/client-error.js'
 
 export const createActivity = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(

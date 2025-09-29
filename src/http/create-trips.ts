@@ -6,6 +6,7 @@ import { z } from 'zod'
 import { getMailClient } from '../lib/mail.js'
 import { prisma } from '../lib/prisma.js'
 import { ClientError } from '../errors/client-error.js'
+import { env } from '../env.js'
 
 export const createTrip = async (app: FastifyInstance) => {
   app.withTypeProvider<ZodTypeProvider>().post(
@@ -66,7 +67,7 @@ export const createTrip = async (app: FastifyInstance) => {
       const formattedStartDate = dayjs(starts_at).format('LL')
       const formattedEndDate = dayjs(ends_at).format('LL')
 
-      const confirmationLink = `http://localhost:3333/trip/${trip.id}/confirm`
+      const confirmationLink = `${env.API_BASE_URL}/trip/${trip.id}/confirm`
 
       const mail = await getMailClient()
 
