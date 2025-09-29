@@ -14,6 +14,7 @@ import { getLinks } from './http/get-links.js'
 import { getParticipants } from './http/get-participants.js'
 import { createInvate } from './http/create-invate.js'
 import { updateTrip } from './http/update-trip.js'
+import { getTripDetails } from './http/get-trip-details.js'
 
 const app = fastify()
 
@@ -34,6 +35,7 @@ app.register(getLinks)
 app.register(getParticipants)
 app.register(createInvate)
 app.register(updateTrip)
+app.register(getTripDetails)
 
 app.listen({ port: 3333 }).then(() => {
   console.log('✅ HTTP SERVER RUNNING ✅')
